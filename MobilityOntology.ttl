@@ -62,11 +62,11 @@ mvdo:hasCalculationMethod a owl:ObjectProperty ;
     rdfs:label "has calculation method"@en ;
     rdfs:comment "Links an indicator to its calculation method."@en .
 
-mvdo:hasTerritorialPartition a owl:ObjectProperty ;
+mvdo:hasTerritory a owl:ObjectProperty ;
     rdfs:domain mvdo:Indicator ;
-    rdfs:range mvdo:TerritorialPartition ;
-    rdfs:label "has territorial partition" ;
-    rdfs:comment "Links an indicator to the territorial partition of reference for the indicator. This information is particularly usefull to describe indicators defined per spatial location."@en .
+    rdfs:range mvdo:Territory ;
+    rdfs:label "has territory" ;
+    rdfs:comment "Links an indicator to the territory of reference for the indicator. This information is particularly usefull to describe indicators defined per territory."@en .
 
 mvdo:isSpaceAggregated a owl:DatatypeProperty ;
     rdfs:domain mvdo:Indicator ;
@@ -124,21 +124,21 @@ mvdo:hasTime a owl:ObjectProperty ;
 
 mvdo:hasSpatialLocation a owl:ObjectProperty ;
     rdfs:domain mvdo:DataRecord ;
-    rdfs:range mvdo:Space ;
+    rdfs:range mvdo:SpatialZone ;
     rdfs:label "has spatial location"@en ;
     rdfs:comment "Links a data record to the associated spatial location."@en .
 
 mvdo:hasOrigin a owl:ObjectProperty ;
     rdfs:subPropertyOf mvdo:hasSpatialLocation ;
     rdfs:domain mvdo:DataRecord ;
-    rdfs:range mvdo:Space ;
+    rdfs:range mvdo:SpatialZone ;
     rdfs:label "has origin"@en ;
     rdfs:comment "Links a movement data record to a origin spatial location."@en .
 
 mvdo:hasDestination a owl:ObjectProperty ;
     rdfs:subPropertyOf mvdo:hasSpatialLocation ;
     rdfs:domain mvdo:DataRecord ;
-    rdfs:range mvdo:Space ;
+    rdfs:range mvdo:SpatialZone ;
     rdfs:label "has destination"@en ;
     rdfs:comment "Links a movement record to a destination spatial location."@en .
 
@@ -146,16 +146,11 @@ mvdo:hasDestination a owl:ObjectProperty ;
 
 # Use geo:hasGeometry from GeoSPARQL ontology to link the geographic area to its geometry
 # Use geo:hasMetricArea from GeoSPARQL ontology to link the geographic area to its area in m²
+# Use geo:sfContains from GeoSPARQL ontology to link the geographical area to the geographical area it contains
 mvdo:Space a owl:Class ;
     rdfs:subClassOf geo:Feature ;
     rdfs:label "Space"@en ;
-    rdfs:comment "A class used to describe a spatial location."@en .
-
-mvdo:isPartOf a owl:ObjectProperty ;
-    rdfs:domain mvdo:Space ;
-    rdfs:range mvdo:Space ;
-    rdfs:label "is part of"@en ;
-    rdfs:comment "Creates a hierarchy of spatial locations by linking a spatial location to another location that contains it."@en .
+    rdfs:comment "A class used to describe any kind of spatial location."@en .
 
 mvdo:hasID a owl:DatatypeProperty ;
     rdfs:domain mvdo:Space ;
@@ -216,9 +211,23 @@ mvdo:TransportationMode a owl:Class ;
     rdfs:label "Transportation Mode"@en ;
     rdfs:comment "Thematic attribute describing a trip in terms of which transportation mode (e.g., car, bike, bus, etc.) was used to perform it."@en .
 
+### Territory
+
+mvdo:Territory a owl:Class ;
+    rdfs:subClassOf mvdo:Space ;
+    rdfs:label "Territory"@en ;
+    rdfs:comment"The overall geographic area representing the entire territory, which can be subdivided into spatial partitions."@en .
+
+mvdo:hasTerritorialPartition a owl:ObjectProperty ;
+    rdfs:domain mvdo:Territory ;
+    rdfs:range mvdo:TerritorialPartition ;
+    rdfs:label "has territorial partition" ;
+    rdfs:comment "Links a territory to the different territorial partitions used in this territory."@en .
+
 ### Territorial partition
 
 mvdo:TerritorialPartition a owl:Class ;
+    rdfs:subClassOf geo:FeatureCollection ;
     rdfs:label "Territorial Partition"@en ;
     rdfs:comment "A class used to describe the spatial granularity, i.e. how the territory is partitioned into spatial locations."@en .
 
@@ -234,17 +243,27 @@ mvdo:hasParts a owl:DatatypeProperty ;
     rdfs:label "has parts"@en ;
     rdfs:comment "Defines the number of spatial locations contained in the territorial partition."@en .
 
-mvdo:containsSpace a owl:ObjectProperty ;
+mvdo:hasSpatialZone a owl:ObjectProperty ;
+    rdfs:subPropertyOf rdfs:member ;
     rdfs:domain mvdo:TerritorialPartition ;
-    rdfs:range mvdo:Space ;
-    rdfs:label "contains space"@en ;
-    rdfs:comment "Links the territorial partitiion to its spatial locations."@en .
+    rdfs:range mvdo:SpatialZone ;
+    rdfs:label "has spatial zone"@en ;
+    rdfs:comment "Links a territorial partition to every spatial zone it contains"@en .
+
+### Spatial Zone
+
+# Use geo:sfContains from GeoSPARQL ontology to link the geographical area to the geographical area it contains
+mvdo:SpatialZone a owl:Class ;
+    rdfs:subClassOf mvdo:Space ;
+    rdfs:label "Spatial zone"@en ;
+    rdfs:comment "A specific spatial location such as such as a district, a street segment, or a custom area used as a basis for calculating mobility indicators"@en .
 
 ### Calculation Method
 
 # Use qudt:hasNumeratorPart from QUDT to link a quantity kind to the value of its numerator's formula. It can be anything such as a Literal or a String
 # Use qudt:hasDenominatorPart from QUDT to link a quantity kind to the value of its denominator's formula. It can be anything such as a Literal or a String
 # Use qudt:expression from QUDT to link a quantity kind to its one line formula. It can be anything such as a Literal or a String
+# Use qudt:plainTextDescription from QUDT to link a quantity kind to its textual description
 mvdo:CalculationMethod a owl:Class ;
     rdfs:subclassOf qudt:QuantityKind ;
     rdfs:label "Calculation method"@en ;
