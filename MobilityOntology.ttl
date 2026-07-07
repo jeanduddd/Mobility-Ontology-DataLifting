@@ -146,7 +146,7 @@ mvdo:hasDestination a owl:ObjectProperty ;
 
 # Use geo:hasGeometry from GeoSPARQL ontology to link the geographic area to its geometry
 # Use geo:hasMetricArea from GeoSPARQL ontology to link the geographic area to its area in m²
-# Use geo:sfContains from GeoSPARQL ontology to link the geographical area to the geographical area it contains
+# Use geo:sfWithin from GeoSPARQL ontology to link the geographical area to the geographical area that contains it
 mvdo:Space a owl:Class ;
     rdfs:subClassOf geo:Feature ;
     rdfs:label "Space"@en ;
@@ -252,7 +252,7 @@ mvdo:hasSpatialZone a owl:ObjectProperty ;
 
 ### Spatial Zone
 
-# Use geo:sfContains from GeoSPARQL ontology to link the geographical area to the geographical area it contains
+# Use geo:sfWithin from GeoSPARQL ontology to link the geographical area to the geographical area that contains it
 mvdo:SpatialZone a owl:Class ;
     rdfs:subClassOf mvdo:Space ;
     rdfs:label "Spatial zone"@en ;
