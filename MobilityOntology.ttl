@@ -146,7 +146,7 @@ mvdo:hasDestination a owl:ObjectProperty ;
 
 # Use geo:hasGeometry from GeoSPARQL ontology to link the geographic area to its geometry
 # Use geo:hasMetricArea from GeoSPARQL ontology to link the geographic area to its area in m²
-# Use geo:sfWithin from GeoSPARQL ontology to link the geographical area to the geographical area that contains it
+# Use geo:sfContains from GeoSPARQL ontology to link the geographical area to the geographical area it contains
 mvdo:Space a owl:Class ;
     rdfs:subClassOf geo:Feature ;
     rdfs:label "Space"@en ;
@@ -226,6 +226,7 @@ mvdo:hasTerritorialPartition a owl:ObjectProperty ;
 
 ### Territorial partition
 
+# Use rdf:memeber from RDF to link the territorial partition to every spatial zone it contains
 mvdo:TerritorialPartition a owl:Class ;
     rdfs:subClassOf geo:FeatureCollection ;
     rdfs:label "Territorial Partition"@en ;
@@ -243,16 +244,9 @@ mvdo:hasParts a owl:DatatypeProperty ;
     rdfs:label "has parts"@en ;
     rdfs:comment "Defines the number of spatial locations contained in the territorial partition."@en .
 
-mvdo:hasSpatialZone a owl:ObjectProperty ;
-    rdfs:subPropertyOf rdfs:member ;
-    rdfs:domain mvdo:TerritorialPartition ;
-    rdfs:range mvdo:SpatialZone ;
-    rdfs:label "has spatial zone"@en ;
-    rdfs:comment "Links a territorial partition to every spatial zone it contains"@en .
-
 ### Spatial Zone
 
-# Use geo:sfWithin from GeoSPARQL ontology to link the geographical area to the geographical area that contains it
+# Use geo:sfContains from GeoSPARQL ontology to link the geographical area to the geographical area it contains
 mvdo:SpatialZone a owl:Class ;
     rdfs:subClassOf mvdo:Space ;
     rdfs:label "Spatial zone"@en ;
