@@ -68,18 +68,6 @@ mvdo:hasTerritory a owl:ObjectProperty ;
     rdfs:label "has territory" ;
     rdfs:comment "Links an indicator to the territory of reference for the indicator. This information is particularly usefull to describe indicators defined per territory."@en .
 
-mvdo:isSpaceAggregated a owl:DatatypeProperty ;
-    rdfs:domain mvdo:Indicator ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "is space aggregated" ;
-    rdfs:comment "Links an indicator with a boolean defining whether the space dimension is aggregated, e.g., the indicator is defined over the whole territory or individual spatial locations."@en .
-
-mvdo:isTimeAggregated a owl:DatatypeProperty ;
-    rdfs:domain mvdo:Indicator ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "is time aggregated" ;
-    rdfs:comment "Links an indicator with a boolean defining whether the time dimension is aggregated."@en .
-
 mvdo:hasTheme a owl:ObjectProperty ;
     rdfs:domain mvdo:Indicator ;
     rdfs:range mvdo:Theme ;
@@ -119,6 +107,18 @@ mvdo:hasTime a owl:ObjectProperty ;
     rdfs:range mvdo:Time ;
     rdfs:label "has time"@en ;
     rdfs:comment "Links a data record to the temporal extent it was computed"@en .
+
+mvdo:isSpaceAggregated a owl:DatatypeProperty ;
+    rdfs:domain mvdo:DataRecord ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is space aggregated" ;
+    rdfs:comment "Links a data record with a boolean defining whether the space dimension is aggregated, e.g., the indicator is defined over the whole territory or individual spatial locations."@en .
+
+mvdo:isTimeAggregated a owl:DatatypeProperty ;
+    rdfs:domain mvdo:DataRecord ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is time aggregated" ;
+    rdfs:comment "Links a data record with a boolean defining whether the time dimension is aggregated."@en .
 
 #Spatial links properties
 
