@@ -145,6 +145,7 @@ mvdo:hasDestination a owl:ObjectProperty ;
 ###Space
 
 # Use geo:hasGeometry from GeoSPARQL ontology to link the geographic area to its geometry
+# Use geo:hasCentroid from GeoSPARQL ontology to link the geographic area to its centroid
 # Use geo:hasMetricArea from GeoSPARQL ontology to link the geographic area to its area in m²
 # Use geo:sfContains from GeoSPARQL ontology to link the geographical area to the geographical area it contains
 mvdo:Space a owl:Class ;
