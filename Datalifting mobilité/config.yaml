@@ -1,0 +1,102 @@
+### Import Parameters
+importParameters:
+  createSpaces: true
+  createIndicators: true
+  createRecords: true
+
+### Source Files
+sources:
+  inputFolder: "DataLifting_input"
+
+### Property Mappings
+mapping_spaces:
+  hasSpaceType: "spaceType"
+  hasSpaceID: "spaceID"
+  hasName: "name"
+  hasParentSpaceID: "parentID"
+  hasPopulation: ""
+  contains: ""
+  hasCentroidLatitude: ""
+  hasCentroidLongitude: ""
+  hasSqmArea: "" #TODO refaire les espaces avec la bonne prop
+#  hasSqkmArea: ""
+
+mapping_indicators:
+  hasIndicatorType: "hasIndicatorType"
+  hasObject: "hasObject"
+  onTerritoryName: "onTerritoryName"
+  onTerritorySpaceID: "onTerritorySpaceID"
+  hasCalculationMethod: "hasCalculationMethod"
+  hasNumerator: "hasNumerator"
+  hasDenominator: "hasDenominator"
+  hasExpression: "hasExpression"
+  hasPlainTextDescription: "hasPlainTextDescription"
+  hasTripPurposeTheme: "hasTripPurposeTheme"
+  hasTransportationModeTheme: "hasTransportationModeTheme"
+  hasTerritories: "hasTerritories"
+  hasRecords: "hasRecords"
+
+# indicateur si hasTerritories c'est quon def les indicateurs seulement...
+# il ne peut pas y avoir et les territories et les records pcq les records sont associés à 1 
+#indicateur sur 1 territoire... ya pas de record avec ttes les meme prop sur 2 territoires différents...
+#--> est ce que c pas la meme avec le theme ? l'indicateur ne dépend pas du theme 
+# comme il ne dépend pas du time et space aggregate ... 
+
+#okok... si l'indicateur est pas lié à l'espace, comment on sait sur quoi il est def?
+#il faudrait parcourir l'ensemble des records associés pour en déduire le territoire le plus large
+#et meme comme ca... ca veut dire que si on met france tt en haut pour regrouper lyon et grenoble,
+#on ne peut pas savoir si c un indicateur qui existe que sur grenoble ou aussi sur lyon
+#sauf si on parcours tout et on regarde quels territoires avec des partitions sont les "parents"...
+
+mapping_records:
+#obligatoire mais que si c un territory
+  onSpatialLocationID: "code"
+  onSpatialLocationName: "name"
+
+#obligatoire mais que si c'est un movement
+  onOriginID: ""
+  onOriginName: ""
+  onDestinationID: ""
+  onDestinationName: ""
+
+#pas obligatoire
+  hasStartTime: "start"
+  hasEndTime: "end"
+
+#pas obligatoire
+  hasTripPurpose: "activity"
+  hasTransportationMode: "transportationMode"
+  hasPopulationProfile: "class"
+
+#obligatoire
+  hasValue: "total"
+
+#obligatoire mais que si c'est un fichier ligne, dans json imbriqué y'aura pas
+  linkedIndicatorType: "indicator"
+  linkedObject: "linkedObject"
+  linkedCalculationMethod: "linkedCalculationMethod"
+  linkedIndicatorTerritoryName: "linkedIndicatorTerritoryName"
+  linkedIndicatorTerritorySpaceID: "linkedIndicatorTerritorySpaceID"
+
+#hasSpatialLocation origin destination startTime endTime
+#tripPurpose transportationMode populationClass value 
+# + les infos pour recréer l'ID de l'indicateur, + décomposer les espaces en name et ID 
+#pour recomposer l'ID de l'espace
+
+#possiblement dans un 2eme temps mettre une prop pour définir value total ou density
+#pour recréer le bon ID de l'indicateur parent par la suite. Possiblement mettre +ieurs valeurs dans
+#la meme ligne de record 
+
+#RecordID RecordofIndicatorID hasSpatialLocation origin destination startTime endTime
+#tripPurpose transportationMode populationClass value timeAggregation spaceAggregation
+
+  #mettre une prop pour chaque type de valeur genre hasValue, hasTotal et hasDensity
+  #si c sur le meme fichier ca permet de faire les 3 en meme temps comme présence
+  #sinon penser à mettre une ligne valeur et une ligne valeur type pour juste 1 valeur de type différent
+
+mapping_geometries:
+  hasAssociatedSpaceID: "code"
+  hasAssociatedName: "name"
+  hasCentroidLatitude: ""
+  hasCentroidLongitude: ""
+  hasSqmArea: "area_sqm"

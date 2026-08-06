@@ -1,0 +1,140 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix geo:  <http://www.opengis.net/ont/geosparql#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix quantitykind:   <https://qudt.org/3.3.0/vocab/quantitykind> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix mvdo: <http://ns.inria.fr/movida/ontology#> .
+@prefix mvdth: <http://ns.inria.fr/movida/thesaurus#> .
+@prefix :               <http://ns.inria.fr/movida/data#> .
+@prefix rr:             <http://www.w3.org/ns/r2rml#> .
+@prefix xrr:            <http://i3s.unice.fr/xr2rml#> .
+
+
+### INDICATOR
+
+<#Indicator>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.indicator2convert.find({})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasTerritory;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/data#{$.hasLinkedTerritoryID}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasIndicatorType;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/thesaurus#{$.hasIndicatorType}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasTheme;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/thesaurus#{$.hasTripPurposeTheme}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasTheme;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/thesaurus#{$.hasTransportationModeTheme}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasObject;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/thesaurus#{$.hasObject}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasCalculationMethod ;
+        rr:objectMap [ 
+            rr:termType rr:BlankNode ;
+            rr:template "CalculationMethod-{$.hasCalculationMethod}-{$.hasNumerator}-{$.hasDenominator}-{$.hasExpression}-{$.hasPlainTextDescription}" ;
+        ];
+    ];
+    .
+
+
+<#IndicatorTerritory>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.indicator2convert.find({"hasIndicatorClass" : "Territory"})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+		rr:class mvdo:TerritoryIndicator;
+    ];    
+    .
+
+<#IndicatorMovement>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.indicator2convert.find({"hasIndicatorClass" : "Movement"})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+		rr:class mvdo:MovementIndicator;
+    ];    
+    .
+
+<#CalculationMethod>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.indicator2convert.find({})""";
+    ];
+    rr:subjectMap [ 
+        rr:termType rr:BlankNode ;
+        rr:template "CalculationMethod-{$.hasCalculationMethod}-{$.hasNumerator}-{$.hasDenominator}-{$.hasExpression}-{$.hasPlainTextDescription}" ;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate rdf:type ;
+        rr:objectMap [
+            rr:template "http://qudt.org/schema/qudt/{hasCalculationMethod}" ;
+            rr:termType rr:IRI ;
+        ]
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate qudt:plainTextDescription ;
+        rr:objectMap [ 
+            xrr:reference "$.hasPlainTextDescription" ;
+            rr:datatype rdfs:Literal ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate qudt:hasNumeratorPart ;
+        rr:objectMap [ 
+            xrr:reference "$.hasNumerator" ;
+            rr:datatype rdfs:Literal ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate qudt:hasDenominatorPart ;
+        rr:objectMap [ 
+            xrr:reference "$.hasDenominator" ;
+            rr:datatype rdfs:Literal ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate qudt:expression ;
+        rr:objectMap [ 
+            xrr:reference "$.hasExpression" ;
+            rr:datatype rdfs:Literal ;
+        ];
+    ];
+    .

@@ -1,0 +1,29 @@
+version: '3.2'
+services:
+
+  morph-xr2rml:
+    image: frmichel/morph-xr2rml:v1.3.2
+    container_name: morph-xr2rml
+    networks:
+      - xr2rml-net
+    volumes:
+      - "./DataLifting_mappings:/xr2rml_config"
+      - "./DataLifting_output:/xr2rml_output"
+      - "./log:/log"
+
+  mongo-xr2rml:
+    image: mongo:4.4.6
+    container_name: mongo-xr2rml    
+    networks:
+      - xr2rml-net
+    ports:
+      - "27017:27017"
+    volumes:
+      - "./mongo_db:/data/db"
+      - "./mongo_tools:/mongo_tools"
+      - "./DataLifting_intermediateFiles:/mongo_import"
+
+networks:
+  xr2rml-net:
+    driver: bridge
+

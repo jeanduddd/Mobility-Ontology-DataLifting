@@ -1,0 +1,232 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix geo:  <http://www.opengis.net/ont/geosparql#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix quantitykind:   <https://qudt.org/3.3.0/vocab/quantitykind> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix mvdo: <http://ns.inria.fr/movida/ontology#> .
+@prefix mvdth: <http://ns.inria.fr/movida/thesaurus#> .
+@prefix :               <http://ns.inria.fr/movida/data#> .
+@prefix rr:             <http://www.w3.org/ns/r2rml#> .
+@prefix xrr:            <http://i3s.unice.fr/xr2rml#> .
+
+
+### RECORD
+<#Record>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.record2convert.find({})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+        rr:class mvdo:DataRecord;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasSpatialLocation;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/data#{$.hasSpatialLocationID}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasOrigin;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/data#{$.hasOriginID}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasDestination;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/data#{$.hasDestinationID}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:isRecordOf;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/data#{$.hasLinkedIndicatorID}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasTripPurpose;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/thesaurus#{$.hasTripPurpose}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasTransportationMode;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/thesaurus#{$.hasTransportationMode}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:isTimeAggregated;
+        rr:objectMap [
+            xrr:reference "$.isTimeAggregated" ;
+            rr:datatype xsd:boolean ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:isSpaceAggregated;
+        rr:objectMap [
+            xrr:reference "$.isSpaceAggregated" ;
+            rr:datatype xsd:boolean ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate sosa:hasSimpleResult;
+        rr:objectMap [
+            xrr:reference "$.hasValue" ;
+            rr:datatype xsd:float ;
+        ];
+    ];
+
+    #TODO population profile
+    # rr:predicateObjectMap [
+    #     rr:predicate mvdo:hasPopulationProfile;
+    #     rr:objectMap [
+    #         xrr:reference "$.hasPopulationProfile" ;
+    #         rr:datatype xsd:string ;
+    #     ];
+    # ];
+    .
+
+<#TimeIntervalProperty>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.record2convert.find({ "hasStartTime": { "$ne": null }})""";
+    ];
+    rr:subjectMap [
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasTime ;
+        rr:objectMap [ 
+            rr:termType rr:BlankNode ;
+            rr:template "Time-{$.hasStartTime}-{$.hasEndTime}" ;
+        ];
+    ];
+    .
+
+<#TimeInterval>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.record2convert.find({})""";
+    ];
+    rr:subjectMap [ 
+        rr:termType rr:BlankNode ;
+        rr:template "Time-{$.hasStartTime}-{$.hasEndTime}" ;
+        rr:class mvdo:Time ;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate time:hasBeginning ;
+        rr:objectMap [ 
+            rr:termType rr:BlankNode ;
+            rr:template "instant-{$.hasStartTime}" ;
+        ];
+    ]; 
+    rr:predicateObjectMap [
+        rr:predicate time:hasEnd ;
+        rr:objectMap [ 
+            rr:termType rr:BlankNode ;
+            rr:template "instant-{$.hasEndTime}" ;
+        ];
+    ]; 
+    .
+
+<#InstantStart>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query "db.{{collection}}.find({})";
+    ];
+    rr:subjectMap [ 
+        rr:termType rr:BlankNode ;
+        rr:template "instant-{$.hasStartTime}" ;
+        rr:class time:Instant ;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate time:inDateTime ;
+        rr:objectMap [ 
+            rr:termType rr:BlankNode ;
+            rr:template "GeneralDateTimeDescription-{$.hasStartTime}" ;
+        ];
+    ]
+    .
+
+<#InstantEnd>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query "db.{{collection}}.find({})";
+    ];
+    rr:subjectMap [ 
+        rr:termType rr:BlankNode ;
+        rr:template "instant-{$.hasEndTime}" ;
+        rr:class time:Instant ;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate time:inDateTime ;
+        rr:objectMap [ 
+            rr:termType rr:BlankNode ;
+            rr:template "GeneralDateTimeDescription-{$.hasEndTime}" ;
+        ];
+    ]
+    .
+
+<#GeneralDateTimeDescriptionStart>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query "db.{{collection}}.find({})";
+    ];
+    rr:subjectMap [ 
+        rr:termType rr:BlankNode ;
+        rr:template "GeneralDateTimeDescription-{$.hasStartTime}" ;
+        rr:class time:GeneralDateTimeDescription ;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate time:hour ;
+        rr:objectMap [
+            xrr:reference "$.hasStartTime" ;
+            rr:datatype xsd:nonNegativeInteger ;
+        ];
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate time:unitType ;
+        rr:objectMap [
+            rr:constant time:unitHour ;
+        ];
+    ] ;
+    .
+
+<#GeneralDateTimeDescriptionEnd>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query "db.{{collection}}.find({})";
+    ];
+    rr:subjectMap [ 
+        rr:termType rr:BlankNode ;
+        rr:template "GeneralDateTimeDescription-{$.hasEndTime}" ;
+        rr:class time:GeneralDateTimeDescription ;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate time:hour ;
+        rr:objectMap [
+            xrr:reference "$.hasEndTime" ;
+            rr:datatype xsd:nonNegativeInteger ;
+        ];
+    ] ;
+    rr:predicateObjectMap [
+        rr:predicate time:unitType ;
+        rr:objectMap [
+            rr:constant time:unitHour ;
+        ];
+    ] ;
+    .

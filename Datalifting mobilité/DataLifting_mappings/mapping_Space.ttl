@@ -1,0 +1,274 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix geo:  <http://www.opengis.net/ont/geosparql#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix quantitykind:   <https://qudt.org/3.3.0/vocab/quantitykind> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix mvdo: <http://ns.inria.fr/movida/ontology#> .
+@prefix mvdth: <http://ns.inria.fr/movida/thesaurus#> .
+@prefix :               <http://ns.inria.fr/movida/data#> .
+@prefix rr:             <http://www.w3.org/ns/r2rml#> .
+@prefix xrr:            <http://i3s.unice.fr/xr2rml#> .
+
+
+### SPACE
+
+<#Territory>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.space2convert.find({"hasSpaceType" : "Territory"})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+		rr:class mvdo:Territory;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasID;
+        rr:objectMap [
+            xrr:reference "$.hasSpaceID" ;
+            rr:datatype xsd:integer ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasName;
+        rr:objectMap [
+            xrr:reference "$.hasName" ;
+            rr:datatype rdfs:Literal ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasPopulation;
+        rr:objectMap [
+            xrr:reference "$.hasPopulation" ;
+            rr:datatype xsd:integer ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate geo:hasMetricArea;
+        rr:objectMap [
+            xrr:reference "$.hasSqmArea" ;
+            rr:datatype xsd:float ;
+        ];
+    ];
+    .
+
+<#TerritoryContainsTerritory> 
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.space2convert.find({"hasSpaceType": "Territory",
+                                    "hasParentSpaceType": "Territory"})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasParentID}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate geo:sfContains;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/data#{$.hasID}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    .
+
+<#TerritoryContainsPartition> 
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.space2convert.find({"hasSpaceType" : "Partition"})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasParentID}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasTerritorialPartition;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/data#{$.hasID}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    .
+
+<#Partition>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.space2convert.find({"hasSpaceType" : "Partition"})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+		rr:class mvdo:TerritorialPartition;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasPartitionID;
+        rr:objectMap [
+            xrr:reference "$.hasSpaceID" ;
+            rr:datatype rdfs:Literal ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasPartitionID;
+        rr:objectMap [
+            xrr:reference "$.hasSpaceID" ;
+            rr:datatype rdfs:Literal ;
+        ];
+    ];
+    .
+
+<#PartitionContainsSpatialZone>  
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        
+        xrr:query """db.space2convert.find({"hasSpaceType": "Zone",
+                                    "hasParentSpaceType": "Partition"})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasParentID}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate rdf:member;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/data#{$.hasID}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    .
+
+<#SpatialZone>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.space2convert.find({"hasSpaceType" : "Zone"})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+		rr:class mvdo:SpatialZone;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasID;
+        rr:objectMap [
+            xrr:reference "$.hasSpaceID" ;
+            rr:datatype xsd:integer ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasName;
+        rr:objectMap [
+            xrr:reference "$.hasName" ;
+            rr:datatype rdfs:Literal ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate mvdo:hasPopulation;
+        rr:objectMap [
+            xrr:reference "$.hasPopulation" ;
+            rr:datatype xsd:integer ;
+        ];
+    ];
+    .
+
+<#SpatialZoneContainsSpatialZone> 
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        
+        xrr:query """db.space2convert.find({"hasSpaceType": "Zone",
+                                    "hasParentSpaceType": "Zone"})""";
+    ];
+    rr:subjectMap [ 
+        rr:template "http://ns.inria.fr/movida/data#{$.hasParentID}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate geo:sfContains;
+        rr:objectMap [
+            rr:template "http://ns.inria.fr/movida/data#{$.hasID}" ;
+            rr:termType rr:IRI ;
+        ];
+    ];
+    .
+
+<#GeometryProperty>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.space2convert.find({ "hasGeometryWKT": { "$ne": null }})""";
+    ];
+    rr:subjectMap [
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate geo:hasGeometry ;
+        rr:objectMap [ 
+            rr:termType rr:BlankNode ;
+            rr:template "Geometry-{$.hasGeometryWKT}" ;
+        ];
+    ];
+    .
+
+<#Geometry>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.space2convert.find({})""";
+    ];
+    rr:subjectMap [ 
+        rr:termType rr:BlankNode ;
+        rr:template "Geometry-{$.hasGeometryWKT}" ;
+        rr:class geo:Geometry ;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate geo:asGeoJSON ;
+        rr:objectMap [ 
+            xrr:reference "$.hasGeometryGeoJSON" ;
+            rr:datatype geo:geoJSONLiteral ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate geo:asWKT ;
+        rr:objectMap [ 
+            xrr:reference "$.hasGeometryWKT" ;
+            rr:datatype geo:wktLiteral ;
+        ];
+    ]
+    .
+
+<#CentroidProperty>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.space2convert.find({ "hasCentroidWKT": { "$ne": null }})""";
+    ];
+    rr:subjectMap [
+        rr:template "http://ns.inria.fr/movida/data#{$.hasID}";
+    ];
+    rr:predicateObjectMap [
+        rr:predicate geo:hasCentroid ;
+        rr:objectMap [ 
+            rr:termType rr:BlankNode ;
+            rr:template "Geometry-{$.hasCentroidWKT}" ;
+        ];
+    ];
+    .
+
+<#Centroid>
+    a rr:TriplesMap;
+    xrr:logicalSource [
+        xrr:query """db.space2convert.find({})""";
+    ];
+    rr:subjectMap [ 
+        rr:termType rr:BlankNode ;
+        rr:template "Geometry-{$.hasCentroidWKT}" ;
+        rr:class geo:Geometry ;
+    ];
+    rr:predicateObjectMap [
+        rr:predicate geo:asGeoJSON ;
+        rr:objectMap [ 
+            xrr:reference "$.hasCentroidGeoJSON" ;
+            rr:datatype geo:geoJSONLiteral ;
+        ];
+    ];
+    rr:predicateObjectMap [
+        rr:predicate geo:asWKT ;
+        rr:objectMap [ 
+            xrr:reference "$.hasCentroidWKT" ;
+            rr:datatype geo:wktLiteral ;
+        ];
+    ]
+    .
