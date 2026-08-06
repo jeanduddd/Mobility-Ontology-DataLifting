@@ -29,6 +29,7 @@ def runMorphPipeline(df: pd.DataFrame, type2convert: str, batchNumber: str = "")
     mongo_collection = mongo_db[collection]
 
     df = df.replace({np.nan: None})
+    df = df.replace({"nan": None})
     records_json = df.to_dict(orient='records')
 
     print("importing the batch in MongoDB")

@@ -47,7 +47,7 @@ def CsvConversion(chunk: pd.DataFrame, fileAnnotation: str, hasSpaceType: str | 
     df = pd.DataFrame()
     
     if fileAnnotation == "CSV_records":
-        df = extractFlatFileInfosFromDF(chunk, "CSV", config["mapping_records"], ["hasRecords", "hasTerritories"])
+        df = extractFlatFileInfosFromDF(chunk, "CSV", config["mapping_records"], [config["mapping_indicators"]["hasRecords"], config["mapping_indicators"]["hasTerritories"]])
 
     if hasSpaceType:
         df["hasSpaceType"] = hasSpaceType
@@ -225,8 +225,8 @@ def getDataChunks(filePath: str, fileType: str, chunkSize: int = 100000):
             recordPrefix = ""
 
             for prefix, event, value in parser:
-                
-                if '.hasRecords.item' in prefix or prefix.startswith('hasRecords.item'):
+                recordPropertyName = config["mapping_indicators"]["hasRecords"]
+                if f'.{recordPropertyName}.item' in prefix or prefix.startswith(f'{recordPropertyName}.item'):
                     if event == 'start_map' and not inRecord:
                         inRecord = True
                         recordPrefix = prefix
@@ -247,7 +247,7 @@ def getDataChunks(filePath: str, fileType: str, chunkSize: int = 100000):
 
                 elif event not in ('start_map', 'end_map', 'start_array', 'end_array', 'map_key'):
                     key = prefix.split('.')[-1] if '.' in prefix else prefix
-                    if key and key != 'hasRecords':
+                    if key and key != recordPropertyName:
                         indicatorData[key] = value
 
             if chunkRecords:

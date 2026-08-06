@@ -40,7 +40,7 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
     df = pd.DataFrame()
     
     if fileAnnotation == "CSV_indicators":
-        df = extractFlatFileInfos(filePath, "CSV", config["mapping_indicators"], ["hasRecords", "hasTerritories"])
+        df = extractFlatFileInfos(filePath, "CSV", config["mapping_indicators"], [config["mapping_indicators"]["hasRecords"], config["mapping_indicators"]["hasTerritories"]])
 
     if fileAnnotation == "CSV_records":
         hybridMapping = config["mapping_indicators"].copy()
@@ -86,7 +86,7 @@ def JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType):
 
     if fileAnnotation.startswith("flatJSON"):
         if fileAnnotation == "flatJSON_indicators":
-            df = extractFlatFileInfos(filePath, "JSON", config["mapping_indicators"], ["hasRecords", "hasTerritories"])
+            df = extractFlatFileInfos(filePath, "JSON", config["mapping_indicators"], [config["mapping_indicators"]["hasRecords"], config["mapping_indicators"]["hasTerritories"]])
         if fileAnnotation == "flatJSON_records":
             hybridMapping = config["mapping_indicators"].copy()
     
@@ -101,7 +101,7 @@ def JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType):
             #TODO uncomment when population profile is set up
             #hybridMapping["hasPopulationProfileTheme"] = config["mapping_records"]["hasPopulationProfile"]
     
-            df = extractFlatFileInfos(filePath, "JSON", hybridMapping, ["hasRecords","hasTerritories"])
+            df = extractFlatFileInfos(filePath, "JSON", hybridMapping, [config["mapping_indicators"]["hasRecords"], config["mapping_indicators"]["hasTerritories"]])
 
             df["hasTransportationModeTheme"] = df["hasTransportationModeTheme"].apply(
                 lambda x: "TransportationMode" if pd.notna(x) else x)
@@ -122,9 +122,10 @@ def JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType):
             inSpace = False
             spacePrefix = ""
 
+            territoriesPropertyName = config["mapping_indicators"]["hasTerritories"]
+
             for prefix, event, value in parser:
-                #TODO ici pas forcément hasTerritories, faut mettre le nom de la config
-                if '.hasTerritories.item' in prefix or prefix.startswith('hasTerritories.item'):
+                if f'.{territoriesPropertyName}.item' in prefix or prefix.startswith(f'{territoriesPropertyName}.item'):
                     if event == 'start_map' and not inSpace:
                         inSpace = True
                         spacePrefix = prefix
@@ -141,8 +142,7 @@ def JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType):
 
                 elif event not in ('start_map', 'end_map', 'start_array', 'end_array', 'map_key'):
                     key = prefix.split('.')[-1] if '.' in prefix else prefix
-                    #TODO ici pas forcément hasTerritories, faut mettre le nom de la config
-                    if key and key != 'hasTerritories':
+                    if key and key != territoriesPropertyName:
                         indicatorData[key] = value
     
         df = pd.DataFrame(indicators).astype(str)
@@ -155,10 +155,10 @@ def JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType):
         with open(filePath, 'rb') as f:
             parser = ijson.parse(f)
             objects = ijson.items(f, prefix, multiple_values=True)
+            recordPropertyName = config["mapping_indicators"]["hasRecords"]
             for obj in objects:
                 if isinstance(obj, dict):
-                    #TODO ici pas forcément hasRecords mais faut suppr le nom de la config
-                    obj.__delitem__("hasRecords")
+                    obj.__delitem__(recordPropertyName)
                     indicators.append(obj)
 
         df = pd.DataFrame(indicators).astype(str)

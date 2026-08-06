@@ -33,7 +33,7 @@ def computeCentroids(df):
 
     for idx, row in df.iterrows():
 
-        if pd.notna(row["hasCentroidLatitude"]) and pd.notna(row["hasCentroidLongitude"]):
+        if pd.notna(row.get("hasCentroidLatitude")) and pd.notna(row.get("hasCentroidLongitude")):
             centroidLatitude = row["hasCentroidLatitude"]
             centroidLongitude = row["hasCentroidLongitude"]
 
@@ -59,7 +59,7 @@ def computeGeometries(df):
 
     for idx, row in df.iterrows():
 
-        if pd.notna(row["geometry"]):
+        if pd.notna(row.get("geometry")):
             geo = shapely.geometry.shape(row["geometry"])
             wkt = (geo.wkt)
             geoJSONString = json.dumps(shapely.geometry.mapping(geo))
@@ -205,10 +205,10 @@ def JsonConversion(filePath: str, fileAnnotation: str, fileArchitecture: str, ha
         with open(filePath, 'rb') as f:
             parser = ijson.parse(f, multiple_values=True)
             space = {}
+            recordPropertyName = config["mapping_indicators"]["hasRecords"]
 
             for prefix, event, value in parser:
-                #TODO dans le if le prefix c pas tjrs "hasRecords"... faut le construire avec la config
-                if event == 'start_map' and prefix in ('hasRecords.item', 'item.hasRecords.item'):
+                if event == 'start_map' and prefix in (f'{recordPropertyName}.item', f'item.{recordPropertyName}.item'):
                     space = {}
 
                 elif prefix.endswith(config["mapping_records"]["onSpatialLocationName"]) and config["mapping_records"]["onSpatialLocationName"] != "":
@@ -226,7 +226,7 @@ def JsonConversion(filePath: str, fileAnnotation: str, fileArchitecture: str, ha
                 elif prefix.endswith(config["mapping_records"]["onDestinationID"]) and config["mapping_records"]["onDestinationID"] != "":
                     space['onDestinationID'] = value
 
-                elif event == 'end_map' and prefix in ('hasRecords.item', 'item.hasRecords.item'):
+                elif event == 'end_map' and prefix in (f'{recordPropertyName}.item', f'item.{recordPropertyName}.item'):
                     if space.get("onSpatialLocationName") != None or space.get("onSpatialLocationID") != None:
                         spaces.append({
                             "hasName": space.get("onSpatialLocationName"),
@@ -254,8 +254,8 @@ def JsonConversion(filePath: str, fileAnnotation: str, fileArchitecture: str, ha
     if fileAnnotation == "hierarchical json indicator-spaces":
 
         territories = []  
-        #TODO le prefix c pas forcément hasTerritories mais faut prendre le nom de la config
-        prefix = prefix + ".hasTerritories.item"  
+        territoriesPropertyName = config["mapping_indicators"]["hasTerritories"]
+        prefix = prefix + f".{territoriesPropertyName}.item"  
         
         with open(filePath, 'rb') as f:
             parser = ijson.parse(f)
@@ -461,7 +461,7 @@ def extractGeometryInfos(geometryFiles):
         dfGeoms.rename(columns={config["mapping_geometries"]["hasCentroidLatitude"]: "hasCentroidLatitude"}, inplace=True)
         dfGeoms.rename(columns={config["mapping_geometries"]["hasCentroidLongitude"]: "hasCentroidLongitude"}, inplace=True)
         dfGeoms.rename(columns={config["mapping_geometries"]["hasSqmArea"]: "hasSqmArea"}, inplace=True)
-
+        
         standardGeometrySchema = ["geometry", "hasAssociatedSpaceID", "hasAssociatedName", "hasCentroidLatitude", "hasCentroidLongitude", "hasSqmArea"]
         dfGeoms = dfGeoms.reindex(columns=standardGeometrySchema)
 
@@ -512,11 +512,12 @@ def spaceConversion(spaceFiles: set, geometryFiles: set, hasSpaceType: str | Non
             fileArchitecture = spaceFileInfos[2]
             df = pd.concat([df, JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType)],ignore_index=True)
 
-    dictTypes = df.dropna(subset=["hasSpaceID"]).set_index("hasSpaceID")["hasSpaceType"].to_dict()
-    dictIds = df.dropna(subset=["hasSpaceID"]).set_index("hasSpaceID")["hasID"].to_dict()
+    if "hasParentSpaceID" in df.columns and "hasSpaceID" in df.columns:
+        dictTypes = df.dropna(subset=["hasSpaceID"]).set_index("hasSpaceID")["hasSpaceType"].to_dict()
+        dictIds = df.dropna(subset=["hasSpaceID"]).set_index("hasSpaceID")["hasID"].to_dict()
 
-    df["hasParentSpaceType"] = df["hasParentSpaceID"].map(dictTypes)
-    df["hasParentID"] = df["hasParentSpaceID"].map(dictIds)
+        df["hasParentSpaceType"] = df["hasParentSpaceID"].map(dictTypes)
+        df["hasParentID"] = df["hasParentSpaceID"].map(dictIds)
 
     df = associateGeometries(df, dfGeoms) if geometryFiles != set() else df
     
