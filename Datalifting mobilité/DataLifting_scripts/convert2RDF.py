@@ -259,9 +259,11 @@ def main():
             if signatures["spaces"].issubset(geojsonKeys):
                 #goejson containing spaces and their geometries
                 filesByCategory["space"].add((filepath.name, "geojson"))
+                print(f"-> classified as : space geojson file")
             else:
                 #geojson containing only geometries and the spaceID and name they are linked to
                 filesByCategory["geometry"].add((filepath.name, "geometries"))
+                print(f"-> classified as : geometry geojson file")
             continue
             
         else:

@@ -8,13 +8,13 @@ def extractFlatFileInfos(filePath, fileType, mappingDict, keysToExclude, jsonPre
     """Global function used to read, rename, filter and drop duplicates for a flat JSON or CSV file in batches."""
     
     renameMapping = {}
+    columns = []
 
-    #get the rename mapping keys
     for propertyName, CSVColumn in mappingDict.items():
-        if propertyName not in keysToExclude and CSVColumn is not None:
-            renameMapping[CSVColumn] = propertyName
-
-    columns = list(renameMapping.values())
+        if propertyName not in keysToExclude:
+            columns.append(propertyName)
+            if CSVColumn is not None and CSVColumn != "":
+                renameMapping[CSVColumn] = propertyName
     
     processedChunks = []
 
@@ -71,13 +71,15 @@ def extractFlatFileInfosFromDF(chunk, fileType, mappingDict, keysToExclude, json
     Already take in input a dataframe."""
     
     renameMapping = {}
+    columns = []
 
-    #get the rename mapping keys
     for propertyName, CSVColumn in mappingDict.items():
-        if propertyName not in keysToExclude and CSVColumn != "":
-            renameMapping[CSVColumn] = propertyName
-
-    columns = list(renameMapping.values())
+        if propertyName not in keysToExclude:
+            columns.append(propertyName)
+            if CSVColumn is not None and CSVColumn != "":
+                renameMapping[CSVColumn] = propertyName
+    
+    processedChunks = []
 
     try:
         #rename the columns, keep only useful columns then drop duplicated rows of the chunk passed in argument.

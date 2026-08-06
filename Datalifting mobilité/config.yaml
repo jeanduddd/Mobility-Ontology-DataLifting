@@ -99,4 +99,4 @@ mapping_geometries:
   hasAssociatedName: "name"
   hasCentroidLatitude: ""
   hasCentroidLongitude: ""
-  hasSqmArea: "area_sqm"
+  hasSqmArea: "sqm"

@@ -166,6 +166,13 @@
             rr:datatype xsd:integer ;
         ];
     ];
+    rr:predicateObjectMap [
+        rr:predicate geo:hasMetricArea;
+        rr:objectMap [
+            xrr:reference "$.hasSqmArea" ;
+            rr:datatype xsd:float ;
+        ];
+    ];
     .
 
 <#SpatialZoneContainsSpatialZone> 
