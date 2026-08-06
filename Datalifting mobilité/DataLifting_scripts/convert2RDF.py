@@ -286,20 +286,20 @@ def main():
         )
 
     #Execute indicator conversion with the indicator files
-    # if filesByCategory["indicator"] and config.get("importParameters", {}).get("createIndicators"):
-    #     convertIndicators.indicatorConversion(
-    #         filesByCategory["indicator"], 
-    #         #indicator args
-    #         args.hasSpaceType
-    #     )
+    if filesByCategory["indicator"] and config.get("importParameters", {}).get("createIndicators"):
+        convertIndicators.indicatorConversion(
+            filesByCategory["indicator"], 
+            #indicator args
+            args.hasSpaceType
+        )
 
     #Execute record conversion with the record files
-    # if filesByCategory["record"] and config.get("importParameters", {}).get("createRecords"):
-    #     convertDataRecords.recordConversion(
-    #         filesByCategory["record"], 
-    #         #record args
-    #         args.hasSpaceType
-    #     )
+    if filesByCategory["record"] and config.get("importParameters", {}).get("createRecords"):
+        convertDataRecords.recordConversion(
+            filesByCategory["record"], 
+            #record args
+            args.hasSpaceType
+        )
 
 if __name__ == "__main__":
     main()

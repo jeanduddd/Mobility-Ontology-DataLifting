@@ -480,8 +480,12 @@ def extractGeometryInfos(geometryFiles):
         df = df.groupby(groupbyColumns, as_index=False).first()
         dfGeoms = dfGeoms.reindex(columns=standardGeometrySchema)
 
-    df["hasAssociatedSpaceID"] = df["hasAssociatedSpaceID"].astype(int).astype(str)    
-    df["hasSqmArea"] = df["hasSqmArea"].astype(str)    
+    if "hasAssociatedSpaceID" in df.columns:
+        df["hasAssociatedSpaceID"] = df["hasAssociatedSpaceID"].astype(int).astype(str)    
+    else:
+        df["hasAssociatedSpaceID"] = None
+    if "hasSqmArea" in df.columns:
+        df["hasSqmArea"] = df["hasSqmArea"].astype(str)
     df = df.dropna(axis=1, how='all')
     
     return df    
