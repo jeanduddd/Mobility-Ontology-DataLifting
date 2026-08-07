@@ -37,6 +37,8 @@ This is the process to run the tool:
 4. Start the tool by running the command ```python .\DataLifting_scripts\convert2RDF.py```,
 5. At the end of the conversion, terminate Docker with the command ```docker-compose down```
 
+Note : An example is provided so you can test the tool before adding your own file
+
 ### Morph-xR2RML conversion engine
 Tool made by Frank Michel<br>
 Franck Michel. Morph-xR2RML: MongoDB-to-RDF translation. 2015, ⟨swh:1:dir:8ea716c0d9e69527a5f50378bf135c5952b1a229⟩. ⟨hal-04128090⟩<br>
