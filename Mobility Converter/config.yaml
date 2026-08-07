@@ -10,15 +10,15 @@ sources:
 
 ### Property Mappings
 mapping_spaces:
-  hasSpaceType: "spaceType"
-  hasSpaceID: "spaceID"
-  hasName: "name"
+  hasSpaceType: "hasSpaceType"
+  hasSpaceID: "hasSpaceID"
+  hasName: "hasName"
   hasParentSpaceID: "parentID"
   hasPopulation: ""
   contains: ""
   hasCentroidLatitude: ""
   hasCentroidLongitude: ""
-  hasSqmArea: "" #TODO refaire les espaces avec la bonne prop
+  hasSqmArea: ""
 #  hasSqkmArea: ""
 
 mapping_indicators:
