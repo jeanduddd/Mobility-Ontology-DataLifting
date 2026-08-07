@@ -96,7 +96,7 @@ def flattenSpaceJSON(data, lineOrArray):
 
         hasParentSpaceID = parentID
         df.loc[len(df.index)] = [hasSpaceType, hasSpaceId, hasName, hasParentSpaceID, hasPopulation, hasCentroidLatitude, hasCentroidLongitude, hasSqmArea]
-        if space.get("contains"):
+        if space.get(mapping.get("contains")):
             for containedSpaces in space.get("contains"):
                 flatten(containedSpaces, hasSpaceId)
     
