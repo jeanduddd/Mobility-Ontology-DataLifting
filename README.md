@@ -21,7 +21,7 @@ To run this tool, you also need to install Docker on your device.
 ### How to structure input data ?
 This project allows to convert mutiple file format for spaces, indicators and records.<br>
 Exact specifications are avaliale in another detailed document :<br>
-**[See documentation on input file formats](./DATA_FORMATS.md)**
+**[See documentation on input file formats](./Mobility%20Converter/README.md)**
 
 ### Output / Knowledge graphe
 Once the script ended, you should find your file converted into RDF triples in turtle format in the folder ```DataLifting_output```<br>
