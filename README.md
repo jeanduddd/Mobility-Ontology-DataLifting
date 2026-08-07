@@ -31,7 +31,7 @@ The records are converted in batched so you might find multiple converted record
 
 ### How to run the tool ? 
 This is the process to run the tool:
-1. Place all your input files in the folder ```DataLifting_input```,
+1. Place all your input files in the folder ```DataLifting_input```. You can add multiple files using different format at the same time and the tool will convert all of them at the same time,
 2. Modify the configuration file ```config.yaml``` so the columns/property names of your input files are recognized,
 3. Start Docker with the command ```docker-compose un -d```,
 4. Start the tool by running the command ```python .\DataLifting_scripts\convert2RDF.py```,
