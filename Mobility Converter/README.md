@@ -122,7 +122,7 @@ GeoJSON files are made to manipulate geometries. There are two distinct use case
 This type of file contains both the geometries and the informations necessary to describe a space in the property section.<br>
 
 *Example `spaces.geojson` file :*
-```geojson
+```json
 {
   "type": "FeatureCollection",
   "features": [
@@ -163,7 +163,7 @@ This type of file contains both the geometries and the informations necessary to
 In this case, the GeoJSON file acts as an enrichment of the files that can't hold geometries. It only requires to have common name and ID properties to merge it correctly<br>
 
 *Example `geometries.geojson` file :*
-```geojson
+```json
 {
   "type": "FeatureCollection",
   "features": [
