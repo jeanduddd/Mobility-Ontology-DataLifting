@@ -3,11 +3,19 @@ import pandas as pd
 
 def createURI(row, keys, prefix="space"):
 
-    values = [row.get(key) for key in keys]
-    if all(pd.isna(value) or value == "" for value in values):
+    rawValues = [row.get(key) for key in keys]
+    if all(pd.isna(value) or value is None or value == "" for value in rawValues):
         return None
-    values = [str(value) for value in values]
-    concatString = "-".join(values)
+    
+    cleanValues = []
+    for val in rawValues:
+        if not pd.isna(val) and val is not None and val != "":
+            valStr = str(val)
+            if valStr.endswith(".0"):
+                valStr = valStr[:-2]
+            cleanValues.append(valStr)
+            
+    concatString = "-".join(cleanValues)
     hashedValue = hashlib.sha256(concatString.encode('utf-8')).hexdigest()
     
     return f"{prefix}-{hashedValue}"

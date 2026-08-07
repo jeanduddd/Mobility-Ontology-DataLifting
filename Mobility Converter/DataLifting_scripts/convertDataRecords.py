@@ -49,6 +49,8 @@ def CsvConversion(chunk: pd.DataFrame, fileAnnotation: str, hasSpaceType: str | 
     if fileAnnotation == "CSV_records":
         df = extractFlatFileInfosFromDF(chunk, "CSV", config["mapping_records"], [config["mapping_indicators"]["hasRecords"], config["mapping_indicators"]["hasTerritories"]])
 
+    df = df.replace({"nan": None})
+    
     if hasSpaceType:
         df["hasSpaceType"] = hasSpaceType
 
@@ -66,7 +68,6 @@ def CsvConversion(chunk: pd.DataFrame, fileAnnotation: str, hasSpaceType: str | 
     #     df.loc[df["hasPopulationProfile"].notna(), "hasPopulationProfileTheme"] = "PopulationProfile"
     # else:
     #     df["hasTripPurposeTheme"] = None
-
 
     recordKeys = ["hasOriginID","hasDestinationID","hasSpatialLocationID","hasLinkedIndicatorID","hasTripPurpose","hasTransportationMode","hasStartTime","hasEndTime","hasPopulationProfile"]
 
@@ -124,6 +125,7 @@ def JsonConversion(chunk: pd.DataFrame, fileAnnotation, fileArchitecture, hasSpa
 
         df = extractFlatFileInfosFromDF(chunk, "JSON", hybridMapping, [])
 
+    df = df.replace({"nan": None})
     if hasSpaceType:
         df["hasSpaceType"] = hasSpaceType
 

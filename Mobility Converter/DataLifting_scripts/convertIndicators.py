@@ -41,7 +41,7 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
     
     if fileAnnotation == "CSV_indicators":
         df = extractFlatFileInfos(filePath, "CSV", config["mapping_indicators"], [config["mapping_indicators"]["hasRecords"], config["mapping_indicators"]["hasTerritories"]])
-
+        
     if fileAnnotation == "CSV_records":
         hybridMapping = config["mapping_indicators"].copy()
 
@@ -56,7 +56,7 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
         #TODO uncomment when population profile is set up
         #hybridMapping["hasPopulationProfileTheme"] = config["mapping_records"]["hasPopulationProfile"]
 
-        df = extractFlatFileInfos(filePath, "CSV", hybridMapping, ["contains"])
+        df = extractFlatFileInfos(filePath, "CSV", hybridMapping, [config["mapping_spaces"]["contains"]])
 
         df["hasTransportationModeTheme"] = df["hasTransportationModeTheme"].apply(
             lambda x: "TransportationMode" if pd.notna(x) else x)
@@ -65,6 +65,8 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
         #TODO uncomment when population profile is set up
         # df["hasPopulationProfileTheme"] = df["hasPopulationProfileTheme"].apply(
         #     lambda x: "PopulationProfile" if pd.notna(x) else x)
+
+    df = df.replace({"nan": None})
 
     #todo mettre les vrais params
     # if hasSpaceType:
@@ -165,6 +167,8 @@ def JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType):
         df = df.replace({"nan": None})
         df = renameColumns(df, config["mapping_indicators"],[config["mapping_indicators"]["hasRecords"], config["mapping_indicators"]["hasTerritories"]] )
 
+    df = df.replace({"nan": None})
+    
     #todo mettre les vrais params
     # if hasSpaceType:
     #     df["hasSpaceType"] = hasSpaceType
@@ -201,6 +205,7 @@ def indicatorConversion(indicatorFiles: set, hasSpaceType: str | None):
             df = pd.concat([df, JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType)],ignore_index=True)
 
     df = checkIndicatorProperties(df)
+    df = df.groupby("hasID", as_index=False).first()
     runMorphPipeline(df,"indicator")
 
     print("Indicator conversion ended successfully")

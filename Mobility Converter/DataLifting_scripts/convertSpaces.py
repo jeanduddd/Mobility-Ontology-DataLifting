@@ -97,7 +97,7 @@ def flattenSpaceJSON(data, lineOrArray):
         hasParentSpaceID = parentID
         df.loc[len(df.index)] = [hasSpaceType, hasSpaceId, hasName, hasParentSpaceID, hasPopulation, hasCentroidLatitude, hasCentroidLongitude, hasSqmArea]
         if space.get(mapping.get("contains")):
-            for containedSpaces in space.get("contains"):
+            for containedSpaces in space.get(mapping.get("contains")):
                 flatten(containedSpaces, hasSpaceId)
     
     for item in data:
@@ -114,14 +114,14 @@ def JsonConversion(filePath: str, fileAnnotation: str, fileArchitecture: str, ha
 
     if fileAnnotation.startswith("flatJSON"):
         if fileAnnotation == "flatJSON_spaces":
-            df = extractFlatFileInfos(filePath, "JSON", config["mapping_spaces"], ["contains"],prefix)
+            df = extractFlatFileInfos(filePath, "JSON", config["mapping_spaces"], [config["mapping_spaces"]["contains"]],prefix)
         if fileAnnotation == "flatJSON_indicators":
             hybridMapping = config["mapping_spaces"].copy()
         
             hybridMapping["hasSpaceID"] = config["mapping_indicators"]["onTerritorySpaceID"]
             hybridMapping["hasName"] = config["mapping_indicators"]["onTerritoryName"]
 
-            df = extractFlatFileInfos(filePath, "JSON", hybridMapping, ["contains"],prefix)
+            df = extractFlatFileInfos(filePath, "JSON", hybridMapping, [config["mapping_spaces"]["contains"]],prefix)
             df["hasSpaceType"] = "Territory"
 
         if fileAnnotation == "flatJSON_records":
@@ -130,7 +130,7 @@ def JsonConversion(filePath: str, fileAnnotation: str, fileArchitecture: str, ha
             mappingSpatialLocation["hasSpaceID"] = config["mapping_records"]["onSpatialLocationID"]
             mappingSpatialLocation["hasName"] = config["mapping_records"]["onSpatialLocationName"]
 
-            dfSpatialLocation = extractFlatFileInfos(filePath, "JSON", mappingSpatialLocation, ["contains"],prefix)
+            dfSpatialLocation = extractFlatFileInfos(filePath, "JSON", mappingSpatialLocation, [config["mapping_spaces"]["contains"]],prefix)
             if not dfSpatialLocation.empty:
                 dfSpatialLocation["hasSpaceType"] = "Zone"
                 df = pd.concat([df, dfSpatialLocation], ignore_index=True)
@@ -140,7 +140,7 @@ def JsonConversion(filePath: str, fileAnnotation: str, fileArchitecture: str, ha
             mappingOrigin["hasSpaceID"] = config["mapping_records"]["onOriginID"]
             mappingOrigin["hasName"] = config["mapping_records"]["onOriginName"]
 
-            dfOrigin = extractFlatFileInfos(filePath, "JSON", mappingOrigin, ["contains"],prefix)
+            dfOrigin = extractFlatFileInfos(filePath, "JSON", mappingOrigin, [config["mapping_spaces"]["contains"]],prefix)
 
             if not dfOrigin.empty:
                 dfOrigin["hasSpaceType"] = "Zone"
@@ -151,7 +151,7 @@ def JsonConversion(filePath: str, fileAnnotation: str, fileArchitecture: str, ha
             mappingDestination["hasSpaceID"] = config["mapping_records"]["onDestinationID"]
             mappingDestination["hasName"] = config["mapping_records"]["onDestinationName"]
 
-            dfDestination = extractFlatFileInfos(filePath, "JSON", mappingDestination, ["contains"],prefix)
+            dfDestination = extractFlatFileInfos(filePath, "JSON", mappingDestination, [config["mapping_spaces"]["contains"]],prefix)
 
             if not dfDestination.empty:
                 dfDestination["hasSpaceType"] = "Zone"
@@ -162,7 +162,7 @@ def JsonConversion(filePath: str, fileAnnotation: str, fileArchitecture: str, ha
             mappingIndicatorLinkedSpace["hasSpaceID"] = config["mapping_records"]["linkedIndicatorTerritorySpaceID"]
             mappingIndicatorLinkedSpace["hasName"] = config["mapping_records"]["linkedIndicatorTerritoryName"]
 
-            dfIndicatorLinkedSpace = extractFlatFileInfos(filePath, "JSON", mappingIndicatorLinkedSpace, ["contains"],prefix)
+            dfIndicatorLinkedSpace = extractFlatFileInfos(filePath, "JSON", mappingIndicatorLinkedSpace, [config["mapping_spaces"]["contains"]],prefix)
 
             if not dfIndicatorLinkedSpace.empty:
                 dfIndicatorLinkedSpace["hasSpaceType"] = "Territory"
@@ -273,6 +273,7 @@ def JsonConversion(filePath: str, fileAnnotation: str, fileArchitecture: str, ha
     standardDFSchema = ["hasSpaceID", "hasName", "hasSpaceType", "hasPopulation", "hasParentSpaceID", "hasCentroidLatitude", "hasCentroidLongitude", "hasSqmArea"]
     df = df.reindex(columns=standardDFSchema)
 
+    df = df.replace({"nan": None})
 
     if hasSpaceType:
         df["hasSpaceType"] = hasSpaceType
@@ -293,7 +294,7 @@ def GeojsonConversion(filePath: str, hasSpaceType: str | None):
     gdf = gpd.read_file(filePath)
     df = pd.DataFrame(gdf)
 
-    keyToExclude = ["contains"] 
+    keyToExclude = [config["mapping_spaces"]["contains"]]
     renameMapping = {}
     
     for propertyName, CSVColumn in config["mapping_spaces"].items():
@@ -306,6 +307,8 @@ def GeojsonConversion(filePath: str, hasSpaceType: str | None):
     df = df.rename(columns=renameMapping)
     df = df.reindex(columns=columns)
 
+    df = df.replace({"nan": None})
+
     if hasSpaceType:
         df["hasSpaceType"]=hasSpaceType
 
@@ -314,8 +317,8 @@ def GeojsonConversion(filePath: str, hasSpaceType: str | None):
     df = computeCentroids(df)
     df = computeGeometries(df)
 
-    df = df.dropna(axis=1, how='all')
     df = df.drop(columns=["geometry"])
+    df = df.dropna(axis=1, how='all')
 
     return df
 
@@ -329,7 +332,7 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
     df = pd.DataFrame()
 
     if fileAnnotation == "CSV_spaces":
-        df = extractFlatFileInfos(filePath, "CSV", config["mapping_spaces"], ["contains"])
+        df = extractFlatFileInfos(filePath, "CSV", config["mapping_spaces"], [config["mapping_spaces"]["contains"]])
         
     if fileAnnotation == "CSV_indicators":
         hybridMapping = config["mapping_spaces"].copy()
@@ -337,7 +340,7 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
         hybridMapping["hasSpaceID"] = config["mapping_indicators"]["onTerritorySpaceID"]
         hybridMapping["hasName"] = config["mapping_indicators"]["onTerritoryName"]
 
-        df = extractFlatFileInfos(filePath, "CSV", hybridMapping, ["contains"])
+        df = extractFlatFileInfos(filePath, "CSV", hybridMapping, [config["mapping_spaces"]["contains"]])
         df["hasSpaceType"] = "Territory"
 
     if fileAnnotation == "CSV_records":
@@ -347,7 +350,7 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
         mappingSpatialLocation["hasSpaceID"] = config["mapping_records"]["onSpatialLocationID"]
         mappingSpatialLocation["hasName"] = config["mapping_records"]["onSpatialLocationName"]
 
-        dfSpatialLocation = extractFlatFileInfos(filePath, "CSV", mappingSpatialLocation, ["contains"])
+        dfSpatialLocation = extractFlatFileInfos(filePath, "CSV", mappingSpatialLocation, [config["mapping_spaces"]["contains"]])
 
         if not dfSpatialLocation.empty:
             dfSpatialLocation["hasSpaceType"] = "Zone"
@@ -358,7 +361,7 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
         mappingOrigin["hasSpaceID"] = config["mapping_records"]["onOriginID"]
         mappingOrigin["hasName"] = config["mapping_records"]["onOriginName"]
 
-        dfOrigin = extractFlatFileInfos(filePath, "CSV", mappingOrigin, ["contains"])
+        dfOrigin = extractFlatFileInfos(filePath, "CSV", mappingOrigin, [config["mapping_spaces"]["contains"]])
 
         if not dfOrigin.empty:
             dfOrigin["hasSpaceType"] = "Zone"
@@ -369,7 +372,7 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
         mappingDestination["hasSpaceID"] = config["mapping_records"]["onDestinationID"]
         mappingDestination["hasName"] = config["mapping_records"]["onDestinationName"]
 
-        dfDestination = extractFlatFileInfos(filePath, "CSV", mappingDestination, ["contains"])
+        dfDestination = extractFlatFileInfos(filePath, "CSV", mappingDestination, [config["mapping_spaces"]["contains"]])
         if not dfDestination.empty:
             dfDestination["hasSpaceType"] = "Zone"
             df = pd.concat([df, dfDestination], ignore_index=True)
@@ -380,13 +383,15 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
         mappingIndicatorLinkedSpace["hasName"] = config["mapping_records"]["linkedIndicatorTerritoryName"]
         mappingIndicatorLinkedSpace["hasParentSpaceID"] = ""
 
-        dfIndicatorLinkedSpace = extractFlatFileInfos(filePath, "CSV", mappingIndicatorLinkedSpace, ["contains"])
+        dfIndicatorLinkedSpace = extractFlatFileInfos(filePath, "CSV", mappingIndicatorLinkedSpace, [config["mapping_spaces"]["contains"]])
         if not dfIndicatorLinkedSpace.empty:
             dfIndicatorLinkedSpace["hasSpaceType"] = "Territory"    
             df = pd.concat([df, dfIndicatorLinkedSpace], ignore_index=True)
         
         df = df.drop_duplicates()
 
+    df = df.replace({"nan": None})
+    
     if hasSpaceType:
         df["hasSpaceType"] = hasSpaceType
   
