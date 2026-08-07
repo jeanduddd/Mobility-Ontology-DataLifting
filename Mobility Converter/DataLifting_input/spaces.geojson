@@ -1,0 +1,24 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "spaceType": "Partition",
+        "name": "Regions",
+        "ID": "Regions",
+        "hasParentSpaceID": "0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": null,
+      "properties": {
+        "spaceType": "Zone",
+        "name": "PACA",
+        "ID": "1",
+        "hasParentSpaceID": "Regions"
+      }
+    }
+]}

@@ -1,0 +1,3 @@
+indicatorType;calculationMethod;object;territorySpaceID;territoryName;hasExpression
+Presence;Ratio;Movers;0;France;total/sum(pop_df$pop)
+Fluctuation;Count;Movers;0;France;pres - pop

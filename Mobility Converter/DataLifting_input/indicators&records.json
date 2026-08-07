@@ -1,0 +1,38 @@
+[
+  {
+    "indicatorType": "Presence",
+    "calculationMethod": "Ratio",
+    "object": "Movers",
+    "territorySpaceID":"0",
+    "territoryName":"France",
+    "IndicatorsRecords": [
+      {
+        "value": "134.754",
+        "code": "1",
+        "name": "PACA"
+      },
+      {
+        "value": "13"
+      }
+    ]
+  },
+  {
+    "indicatorType": "Fluctuation",
+    "calculationMethod": "Count",
+    "object": "Movers",
+    "territorySpaceID":"0",
+    "territoryName":"France",
+    "IndicatorsRecords": [
+      {
+        "value": "14.75",
+        "code": "1",
+        "name": "PACA"
+      },
+      {
+        "value": "1",
+        "code": "2",
+        "name": "Antibes"
+      }
+    ]
+  }
+]
