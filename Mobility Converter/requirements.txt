@@ -1,0 +1,7 @@
+PyYAML
+pandas
+ijson
+geopandas
+shapely
+pymongo
+numpy
