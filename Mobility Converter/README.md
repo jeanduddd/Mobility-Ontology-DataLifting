@@ -201,7 +201,7 @@ In order to generate the knowledge graph, each object mun have at least some nec
 ### Records
 * `hasValue` : The value of the record
 * `linkedIndicatorType`, `linkedObject`, `linkedCalculationMethod`, `linkedIndicatorTerritoryName`, `linkedIndicatorTerritorySpaceID` : The infomation defining the indicator the record is linked to
-> **Exception enbedded JSON (indicator contains records) :** 
+> **Exception embedded JSON (indicator contains records) :** 
 If records are directly embedded into the indicator, properties `linkedIndicatorType`, `linkedObject`, `linkedCalculationMethod`, `linkedIndicatorTerritoryName` and `linkedIndicatorTerritorySpaceID` are not mandatory, as it is deduced from the parent objects. The only property required is `hasValue`
 
 ### GeoJSON
