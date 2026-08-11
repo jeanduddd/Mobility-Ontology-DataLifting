@@ -3,7 +3,7 @@
 This tool is designed to be flexible. It supports three file types : CSV, JSON and GeoJSON<br>
 
 ### CSV files
-The CSV format is used to convert data fomated in a classic table.<br>
+The CSV format is used to convert data structured as a classic table.<br>
 Earch CSV file must represent only one entity at a time (space, indicator, record).
 <br><br>
 **CSV formating rules :**
@@ -69,7 +69,7 @@ this format enable let the tool deduce relations thanks to the file hierarchy :
 ```
 * spaces inside indicators<br>
 
-Example `spaceInIndicator.json` file :*
+*Example `spaceInIndicator.json` file :*
 ```json
 [
   {
@@ -116,10 +116,10 @@ Example `spaceInIndicator.json` file :*
 
 ```
 ### GeoJSON files
-GeoJSON files are made to manipulate geometries. There are two distinct use cases
+GeoJSON files are made to handle the geographical shapes of your spaces. The tool supports two distinct use cases :
 
-1. Autonomous space GeoJSON file<br>
-This type of file contains both the geometries and the informations necessary to describe a space in the property section.<br>
+1. Spaces Definition GeoJSON File <br>
+This type of file is used to create the spatial entities themselves (Territories, Partitions, Spatial Zones). It contains the properties defining the space (`hasSpaceType`, `hasName`, `hasSpaceID`), additional optionnal properties such as `hasParentSpaceID` or `hasPopulation`, and can optionally include its geometry.<br>
 
 *Example `spaces.geojson` file :*
 ```json
@@ -159,8 +159,11 @@ This type of file contains both the geometries and the informations necessary to
 
 ```
 
-2. Spatial Join File
+2. Geometry Enrichment File
 In this case, the GeoJSON file acts as an enrichment of the files that can't hold geometries. It only requires to have common name and ID properties to merge it correctly<br>
+
+This type of file is used only to add geometries to spaces that are already defined in other files that lacks geographical data like a CSV. It does not create new spaces but maps geographical coordinates to existing ones using common identifiers (hasAssociatedSpaceID, hasAssociatedName).
+
 
 *Example `geometries.geojson` file :*
 ```json
@@ -181,7 +184,7 @@ In this case, the GeoJSON file acts as an enrichment of the files that can't hol
 
 ## Mandatory Fields
 
-In order to generate the knowledge graph, each object mun have at least some necessaty information.<br>Ever property must be entered in the config file in order to classify it in the write category and process correctly the input files.<br>Every non mandatory properties can also be found in the config file
+In order to generate the knowledge graph, each object must have at least some necessary information.<br>Ever property must be entered in the config file in order to classify it in the write category and process correctly the input files.<br>Every non mandatory properties can also be found in the config file
 
 
 ### Spaces
@@ -195,13 +198,13 @@ In order to generate the knowledge graph, each object mun have at least some nec
 * `hasCalculationMethod` : The calculation method used to compute the indicator (Count, Ratio, Density)
 * `onTerritoryName` : The name of the Territory the indicator is defined on
 * `onTerritorySpaceID` : The spaceID of the Territory the indicator is defined on
-> **Exception embedded JSON (indicator contains spaces) :** If spaces are directly embedded into the indicator, properties `onTerritoryName` and `onTerritorySpaceID` are not mandatory, as it is deduced from the child objects.
+> **Exception "All-in-One" JSON File (Embedded JSON, indicator contains spaces) :** If spaces are directly embedded into the indicator, properties `onTerritoryName` and `onTerritorySpaceID` are not mandatory, as it is deduced from the child objects.
 
 
 ### Records
 * `hasValue` : The value of the record
 * `linkedIndicatorType`, `linkedObject`, `linkedCalculationMethod`, `linkedIndicatorTerritoryName`, `linkedIndicatorTerritorySpaceID` : The infomation defining the indicator the record is linked to
-> **Exception embedded JSON (indicator contains records) :** 
+> **Exception "All-in-One" JSON File (Embedded JSON, indicator contains records) :** 
 If records are directly embedded into the indicator, properties `linkedIndicatorType`, `linkedObject`, `linkedCalculationMethod`, `linkedIndicatorTerritoryName` and `linkedIndicatorTerritorySpaceID` are not mandatory, as it is deduced from the parent objects. The only property required is `hasValue`
 
 ### GeoJSON
