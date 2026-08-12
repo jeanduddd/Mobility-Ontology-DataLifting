@@ -6,7 +6,7 @@ Relying on the Morph-xR2RML engine, it generates a knowledge graph based on the 
 ## Project Structure
 
 This is an overview of the internal architecture of the Data Lifting tool:
-### Folders
+### Folders :
 *   **[DataLifting_input](./DataLifting_input)** : Contains the formatted input datasets (CSV, JSON, GeoJSON) ready to be converted. This is where you put your data.
 *   **[Datalifting_output](./DataLifting_output)** : The destination directory where the final generated RDF knowledge graph is saved.
 *   **[DataLifting_mappings](./DataLifting_mappings)** : Contains the xR2RML mapping files. These are the rules used by the engine to translate the data into RDF triples based on the ontology. *(The base structure comes from the Morph-xR2RML repository, while the custom `mapping_*.ttl` files are specific to this tool).*
@@ -14,7 +14,7 @@ This is an overview of the internal architecture of the Data Lifting tool:
 *   **[mongo_tools](./mongo_tools)** : Contains scripts and utilities related to MongoDB management, which is by the lifting engine. *(Duplicated from the original Morph-xR2RML repository).*
 *   **[DataPreparation/](./DataPreparation)** : Contains specific documentation and scripts used for a pre-processing task. It explains how a specific raw output from an external tool was cleaned and formatted into the standard input expected by this pipeline.
 
-### Core Configuration Files
+### Configuration Files :
 *   **[config.yaml](./config.yaml)** : The main configuration file where the tool's parameters and properties are defined.
 *   **[docker-compose.yml](./docker-compose.yml)** : The Docker configuration file that sets up, links, and runs the isolated environment (including the Morph-xR2RML engine). *(Adapted from the original Morph-xR2RML repository).*
 *   **[requirements.txt](./requirements.txt)** : Lists all the specific Python dependencies required to run the scripts locally.
@@ -68,7 +68,7 @@ The converted spaces are located in the file space.ttl<br>
 The converted indicators are located in the file indicator.ttl<br>
 The records are converted in batched so you might find multiple converted record files with the name recordX.ttl, X corresponding to the number of the record batch converted
 
-## Demo (Testing the tool)
+## Demo / Testing the tool
 
 To help you understand how the tool works, a set of demo files is provided by default in the [DataLifting_input](./DataLifting_input) folder (e.g., `indicators.csv`, `spaces.geojson`).<br><br>
 
