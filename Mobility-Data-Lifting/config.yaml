@@ -4,6 +4,9 @@ importParameters:
   createIndicators: true
   createRecords: true
 
+### CSV Configuration
+separator: "" 
+
 ### Source Files
 sources:
   inputFolder: "DataLifting_input"
