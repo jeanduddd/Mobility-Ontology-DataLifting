@@ -8,7 +8,7 @@ Earch CSV file must represent only one entity at a time (space, indicator, recor
 <br><br>
 **CSV formating rules :**
 * the file must contain the column names
-* the separator used must be a semicolumn ';'
+* you can chose the the separator used in the configuration file. The default separator used is ";"
 
 *Example `spaces.csv` file :*
 ```csv
@@ -184,7 +184,7 @@ This type of file is used only to add geometries to spaces that are already defi
 
 ## Mandatory Fields
 
-In order to generate the knowledge graph, each object must have at least some necessary information.<br>Ever property must be entered in the config file in order to classify it in the write category and process correctly the input files.<br>Every non mandatory properties can also be found in the config file
+In order to generate the knowledge graph, each object must have at least some necessary information.<br>Ever property must be entered in the [configuration file](./config.yaml) file in order to classify it in the write category and process correctly the input files.<br>Every non mandatory properties can also be found in the configuration file
 
 
 ### Spaces
