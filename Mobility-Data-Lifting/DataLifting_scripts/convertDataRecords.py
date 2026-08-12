@@ -91,16 +91,16 @@ def CsvConversion(chunk: pd.DataFrame, fileAnnotation: str, hasSpaceType: str | 
 
     df["hasID"] = df.apply(lambda row: createURI(row,recordKeys,"record"),axis=1)
 
-    emptyCol = pd.Series(pd.NA, index=df.index)
-    df["isTimeAggregated"] = (
-        df.get("hasStartTime", emptyCol).isna() &
-        df.get("hasEndTime", emptyCol).isna()
-    )
-    df["isSpaceAggregated"] = (
-        df.get("hasSpatialLocationID", emptyCol).isna() & 
-        df.get("hasOriginID", emptyCol).isna() & 
-        df.get("hasDestinationID", emptyCol).isna()      
-    )
+    # emptyCol = pd.Series(pd.NA, index=df.index)
+    # df["isTimeAggregated"] = (
+    #     df.get("hasStartTime", emptyCol).isna() &
+    #     df.get("hasEndTime", emptyCol).isna()
+    # )
+    # df["isSpaceAggregated"] = (
+    #     df.get("hasSpatialLocationID", emptyCol).isna() & 
+    #     df.get("hasOriginID", emptyCol).isna() & 
+    #     df.get("hasDestinationID", emptyCol).isna()      
+    # )
 
     return df.dropna(axis=1, how='all')
 
@@ -166,16 +166,16 @@ def JsonConversion(chunk: pd.DataFrame, fileAnnotation, fileArchitecture, hasSpa
 
     df["hasID"] = df.apply(lambda row: createURI(row,recordKeys,"record"),axis=1)
 
-    emptyCol = pd.Series(pd.NA, index=df.index)
-    df["isTimeAggregated"] = (
-        df.get("hasStartTime", emptyCol).isna() &
-        df.get("hasEndTime", emptyCol).isna()
-    )
-    df["isSpaceAggregated"] = (
-        df.get("hasSpatialLocationID", emptyCol).isna() & 
-        df.get("hasOriginID", emptyCol).isna() & 
-        df.get("hasDestinationID", emptyCol).isna()      
-    )
+    # emptyCol = pd.Series(pd.NA, index=df.index)
+    # df["isTimeAggregated"] = (
+    #     df.get("hasStartTime", emptyCol).isna() &
+    #     df.get("hasEndTime", emptyCol).isna()
+    # )
+    # df["isSpaceAggregated"] = (
+    #     df.get("hasSpatialLocationID", emptyCol).isna() & 
+    #     df.get("hasOriginID", emptyCol).isna() & 
+    #     df.get("hasDestinationID", emptyCol).isna()      
+    # )
 
     return df.dropna(axis=1, how='all')
 
@@ -183,7 +183,8 @@ def JsonConversion(chunk: pd.DataFrame, fileAnnotation, fileArchitecture, hasSpa
 def getDataChunks(filePath: str, fileType: str, chunkSize: int = 100000):
     """Read a file and yield fixed sized dataframes."""
     if fileType == "CSV":
-        chunkIterator = pd.read_csv(filePath, sep=';', dtype=str, chunksize=chunkSize)
+        CSVseparator = config["separator"] if config["separator"] != "" else ";"
+        chunkIterator = pd.read_csv(filePath, sep=CSVseparator, dtype=str, chunksize=chunkSize)
         for chunk in chunkIterator:
             yield chunk
 
@@ -255,7 +256,7 @@ def getDataChunks(filePath: str, fileType: str, chunkSize: int = 100000):
             if chunkRecords:
                 yield pd.DataFrame(chunkRecords).astype(str)
 
-#todo changer les params 
+#implement correct parameters
 def recordConversion(recordFiles: set, hasSpaceType: str | None):
     """function used to lauch the correct pipeline based on the file structure"""
 

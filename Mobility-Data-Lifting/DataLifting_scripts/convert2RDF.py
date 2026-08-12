@@ -10,6 +10,10 @@ import convertSpaces
 import convertIndicators
 import convertDataRecords
 
+
+with open("config.yaml", "r", encoding="utf-8") as f:
+    config = yaml.safe_load(f)
+
 #delete all files located in the output folder
 for item in os.listdir("DataLifting_output"):
     itemPath = os.path.join("DataLifting_output", item)
@@ -91,7 +95,8 @@ def getJsonStructureType(filepath):
 def classifyCSV(filepath, signatures):
     """Classify a CSV file based on columns."""
     try:
-        columns = set(pd.read_csv(filepath, nrows=0, sep=';').columns)
+        CSVseparator = config["separator"] if config["separator"] != "" else ";"
+        columns = set(pd.read_csv(filepath, nrows=0, sep=CSVseparator).columns)
     except Exception as e:
         print(f"Error while reading CSV {filepath}: {e}")
         return None
@@ -172,9 +177,6 @@ def classifyJSON(filepath, config, signatures):
 def main():
     args = parseArguments()
     
-    with open("config.yaml", "r", encoding="utf-8") as f:
-        config = yaml.safe_load(f)
-
     #a set of signatures representing the mandatory properties for each element
     signatures = {
         "spaces": set([
@@ -277,8 +279,11 @@ def main():
                 filesByCategory[category].add(fileTuple)
             print(f"-> classified as : {classification['type']}")
 
+
+    ### PARAMETERS option is not implemented. The parameter passed is just used as an example.
+
     #Execute space conversion with the space and geometry files
-    if filesByCategory["space"] and config.get("importParameters", {}).get("createSpaces"):
+    if filesByCategory["space"] and config.get("lauchConversion", {}).get("createSpaces"):
         convertSpaces.spaceConversion(
             filesByCategory["space"], 
             filesByCategory["geometry"], 
@@ -286,7 +291,7 @@ def main():
         )
 
     #Execute indicator conversion with the indicator files
-    if filesByCategory["indicator"] and config.get("importParameters", {}).get("createIndicators"):
+    if filesByCategory["indicator"] and config.get("lauchConversion", {}).get("createIndicators"):
         convertIndicators.indicatorConversion(
             filesByCategory["indicator"], 
             #indicator args
@@ -294,7 +299,7 @@ def main():
         )
 
     #Execute record conversion with the record files
-    if filesByCategory["record"] and config.get("importParameters", {}).get("createRecords"):
+    if filesByCategory["record"] and config.get("lauchConversion", {}).get("createRecords"):
         convertDataRecords.recordConversion(
             filesByCategory["record"], 
             #record args

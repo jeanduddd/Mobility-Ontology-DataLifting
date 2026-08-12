@@ -29,7 +29,6 @@ def checkSpaceProperties(df):
 def computeCentroids(df):
     """function used to compute the centroid of a space in different format based on existing information in the dataframe"""
     wktCentroidList = []
-    geojsonCentroidList = []
 
     for idx, row in df.iterrows():
 
@@ -40,14 +39,11 @@ def computeCentroids(df):
             if pd.notna(centroidLongitude) and pd.notna(centroidLatitude):
                 pointGeom = shapely.Point(centroidLongitude, centroidLatitude)
                 wktCentroidList.append(pointGeom.wkt)
-                geojsonCentroidList.append(json.dumps(shapely.geometry.mapping(pointGeom)))
         else:
             wktCentroidList.append(None)
-            geojsonCentroidList.append(None)
 
 
     df["hasCentroidWKT"] = wktCentroidList
-    df["hasCentroidGeoJSON"] = geojsonCentroidList
 
     return df
 
@@ -55,24 +51,19 @@ def computeGeometries(df):
     """function used to compute the geometry of a space in different formats based on existing information in the dataframe"""
 
     wktGeometryList = []
-    geojsonGeometryList = []
 
     for idx, row in df.iterrows():
 
         if pd.notna(row.get("geometry")):
             geo = shapely.geometry.shape(row["geometry"])
             wkt = (geo.wkt)
-            geoJSONString = json.dumps(shapely.geometry.mapping(geo))
 
             wktGeometryList.append(wkt)
-            geojsonGeometryList.append(geoJSONString)
 
         else:
             wktGeometryList.append(None)
-            geojsonGeometryList.append(None)
 
     df["hasGeometryWKT"] = wktGeometryList
-    df["hasGeometryGeoJSON"] = geojsonGeometryList
 
     return df 
 
@@ -322,9 +313,6 @@ def GeojsonConversion(filePath: str, hasSpaceType: str | None):
 
     return df
 
-    #TODO pb avec les geometries... ls " sont remplacés par leur code %22 dans la string geoJSON
-
-
 
 def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
     """function to convert a CSV file into a proper renamed and complete space dataframe"""
@@ -410,9 +398,7 @@ def associateGeometries(dfData: pd.DataFrame, dfGeoms: pd.DataFrame):
 
     columnsGeoms = [
         "hasGeometryWKT", 
-        "hasGeometryGeoJSON", 
         "hasCentroidWKT", 
-        "hasCentroidGeoJSON",
         "hasCentroidLatitude",
         "hasCentroidLongitude",
         "hasSqmArea"

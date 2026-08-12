@@ -1,8 +1,12 @@
 import pandas as pd
 import ijson
 import itertools
+import yaml
 
 CHUNK_SIZE = 100000
+
+with open("config.yaml", "r", encoding="utf-8") as f:
+    config = yaml.safe_load(f)
 
 def extractFlatFileInfos(filePath, fileType, mappingDict, keysToExclude, jsonPrefix=""):
     """Global function used to read, rename, filter and drop duplicates for a flat JSON or CSV file in batches."""
@@ -21,7 +25,8 @@ def extractFlatFileInfos(filePath, fileType, mappingDict, keysToExclude, jsonPre
     if fileType == "CSV":
         try:
             #read the file by chunk of size CHUNK_SIZE
-            chunkIterator = pd.read_csv(filePath, sep=';', dtype=str, chunksize=CHUNK_SIZE)
+            CSVseparator = config["separator"] if config["separator"] != "" else ";"
+            chunkIterator = pd.read_csv(filePath, sep=CSVseparator, dtype=str, chunksize=CHUNK_SIZE)
             #for each chunk, rename the columns, keep only useful columns then drop duplicated rows.
             for chunk in chunkIterator:
                 chunk = chunk.rename(columns=renameMapping)

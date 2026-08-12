@@ -68,20 +68,20 @@
             rr:termType rr:IRI ;
         ];
     ];
-    rr:predicateObjectMap [
-        rr:predicate mvdo:isTimeAggregated;
-        rr:objectMap [
-            xrr:reference "$.isTimeAggregated" ;
-            rr:datatype xsd:boolean ;
-        ];
-    ];
-    rr:predicateObjectMap [
-        rr:predicate mvdo:isSpaceAggregated;
-        rr:objectMap [
-            xrr:reference "$.isSpaceAggregated" ;
-            rr:datatype xsd:boolean ;
-        ];
-    ];
+    # rr:predicateObjectMap [
+    #     rr:predicate mvdo:isTimeAggregated;
+    #     rr:objectMap [
+    #         xrr:reference "$.isTimeAggregated" ;
+    #         rr:datatype xsd:boolean ;
+    #     ];
+    # ];
+    # rr:predicateObjectMap [
+    #     rr:predicate mvdo:isSpaceAggregated;
+    #     rr:objectMap [
+    #         xrr:reference "$.isSpaceAggregated" ;
+    #         rr:datatype xsd:boolean ;
+    #     ];
+    # ];
     rr:predicateObjectMap [
         rr:predicate sosa:hasSimpleResult;
         rr:objectMap [

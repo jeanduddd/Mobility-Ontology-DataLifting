@@ -68,7 +68,7 @@ def CsvConversion(filePath: str, fileAnnotation: str, hasSpaceType: str | None):
 
     df = df.replace({"nan": None})
 
-    #todo mettre les vrais params
+    #implement correct parameters
     # if hasSpaceType:
     #     df["hasSpaceType"] = hasSpaceType
 
@@ -169,7 +169,7 @@ def JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType):
 
     df = df.replace({"nan": None})
     
-    #todo mettre les vrais params
+    #implement correct parameters
     # if hasSpaceType:
     #     df["hasSpaceType"] = hasSpaceType
 
@@ -182,7 +182,7 @@ def JsonConversion(filePath, fileAnnotation, fileArchitecture, hasSpaceType):
     return df.dropna(axis=1, how='all')
     
 
-#todo changer les params 
+#implement correct parameters
 def indicatorConversion(indicatorFiles: set, hasSpaceType: str | None):
     """function used to lauch the correct pipeline based on the file structure"""
 
