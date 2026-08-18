@@ -283,7 +283,7 @@ def main():
     ### PARAMETERS option is not implemented. The parameter passed is just used as an example.
 
     #Execute space conversion with the space and geometry files
-    if filesByCategory["space"] and config.get("lauchConversion", {}).get("createSpaces"):
+    if filesByCategory["space"] and config.get("launchConversion", {}).get("createSpaces"):
         convertSpaces.spaceConversion(
             filesByCategory["space"], 
             filesByCategory["geometry"], 
@@ -291,7 +291,7 @@ def main():
         )
 
     #Execute indicator conversion with the indicator files
-    if filesByCategory["indicator"] and config.get("lauchConversion", {}).get("createIndicators"):
+    if filesByCategory["indicator"] and config.get("launchConversion", {}).get("createIndicators"):
         convertIndicators.indicatorConversion(
             filesByCategory["indicator"], 
             #indicator args
@@ -299,7 +299,7 @@ def main():
         )
 
     #Execute record conversion with the record files
-    if filesByCategory["record"] and config.get("lauchConversion", {}).get("createRecords"):
+    if filesByCategory["record"] and config.get("launchConversion", {}).get("createRecords"):
         convertDataRecords.recordConversion(
             filesByCategory["record"], 
             #record args
