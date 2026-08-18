@@ -29,7 +29,21 @@ services:
       - "./mongo_tools:/mongo_tools"
       - "./DataLifting_intermediateFiles:/mongo_import"
 
+  virtuoso:
+    image: openlink/virtuoso-opensource-7:latest
+    container_name: virtuoso-server
+    networks:
+      - xr2rml-net
+    environment:
+      - DBA_PASSWORD=mysecret 
+      - SPARQL_UPDATE=true
+    ports:
+      - "8890:8890" 
+      - "1111:1111" 
+    volumes:
+      - "./virtuoso_db:/database"
+      - "./DataLifting_output:/usr/share/proj" 
+
 networks:
   xr2rml-net:
     driver: bridge
-
