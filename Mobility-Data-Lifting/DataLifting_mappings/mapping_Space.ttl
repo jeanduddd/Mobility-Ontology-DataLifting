@@ -128,7 +128,7 @@
         rr:template "http://ns.inria.fr/movida/data#{$.hasParentID}";
     ];
     rr:predicateObjectMap [
-        rr:predicate rdf:member;
+        rr:predicate rdfs:member;
         rr:objectMap [
             rr:template "http://ns.inria.fr/movida/data#{$.hasID}" ;
             rr:termType rr:IRI ;
