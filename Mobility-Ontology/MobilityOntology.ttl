@@ -227,7 +227,7 @@ mvdo:hasTerritorialPartition a owl:ObjectProperty ;
 
 ### Territorial partition
 
-# Use rdf:member from RDF to link the territorial partition to every spatial zone it contains
+# Use rdfs:member from RDF to link the territorial partition to every spatial zone it contains
 mvdo:TerritorialPartition a owl:Class ;
     rdfs:subClassOf geo:FeatureCollection ;
     rdfs:label "Territorial Partition"@en ;
